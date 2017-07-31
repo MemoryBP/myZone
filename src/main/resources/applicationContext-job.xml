@@ -7,7 +7,7 @@
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<!-- 数据分析定时下发工作类 -->
-	<bean id="quartzJob" class="com.myzone.util.QuartzJob"/>
+	<bean id="quartzJob" class="com.myzonespringboot.util.QuartzJob"/>
 	<!-- 定义调用对象和调用对象的方法 -->
 	<bean id="jobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<!-- 调用的类 -->

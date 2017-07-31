@@ -1,9 +1,9 @@
-package com.myzone.action;
+package com.myzonespringboot.action;
 
-import com.myzone.model.PageBean;
-import com.myzone.model.User;
-import com.myzone.service.IUserService;
-import com.myzone.util.EncoderByMd5;
+import com.myzonespringboot.model.PageBean;
+import com.myzonespringboot.model.User;
+import com.myzonespringboot.service.IUserService;
+import com.myzonespringboot.util.EncoderByMd5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ public class UserController {
 	}
 
 
-	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	@RequestMapping(value = "/customer", method = RequestMethod.GET)
 	public Map<String, Object> getUserName() {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {

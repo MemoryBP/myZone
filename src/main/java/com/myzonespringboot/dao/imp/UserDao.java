@@ -1,4 +1,4 @@
-package com.myzone.dao.imp;
+package com.myzonespringboot.dao.imp;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.myzone.dao.IUserDao;
-import com.myzone.model.User;
+import com.myzonespringboot.dao.IUserDao;
+import com.myzonespringboot.model.User;
 
 @Repository("userDao")
 public class UserDao implements IUserDao {
@@ -157,7 +157,7 @@ public class UserDao implements IUserDao {
 
 	@Override
 	@Transactional(readOnly = true)
-	public int getCount(String hql) {
+	public int  getCount(String hql) {
 		Query q = sessionFactory.getCurrentSession().createQuery(hql);
 		return Integer.parseInt(q.list().get(0).toString());
 	}

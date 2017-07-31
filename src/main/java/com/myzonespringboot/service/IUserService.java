@@ -1,9 +1,9 @@
-package com.myzone.service;
+package com.myzonespringboot.service;
+
+import com.myzonespringboot.model.PageBean;
+import com.myzonespringboot.model.User;
 
 import java.util.List;
-
-import com.myzone.model.PageBean;
-import com.myzone.model.User;
 
 public interface IUserService {
 	User login(String username,String password);

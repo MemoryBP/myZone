@@ -1,4 +1,4 @@
-package com.myzone.util;
+package com.myzonespringboot.util;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,8 +11,8 @@ import java.text.SimpleDateFormat;
 @Component
 public class QuartzJob {
     /*@Scheduled(cron="0 56 16 ? * FRI")//周五的下午16:00触发 生成数据统计周报*/
-    @Scheduled(fixedRate = 1000 * 60)
-    /*@Scheduled(cron="0 0 17 ? * MON-FRI")*/
+    /*@Scheduled(fixedRate = 1000 * 60)*/
+    @Scheduled(cron="0 0 17 ? * MON-FRI")
     public void weekly() {
 
         //获取统计数据值
@@ -32,7 +32,7 @@ public class QuartzJob {
         }catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        String param="url="+url+"&username="+username+"&password="+MD5Gen.getMD5(MD5Gen.getMD5(password)+tkey)+"&tkey="+tkey+"&mobile="+mobile+"&content="+content+"&productid="+productid+"&xh"+xh;
+        String param="url="+url+"&usernam="+username+"&password="+MD5Gen.getMD5(MD5Gen.getMD5(password)+tkey)+"&tkey="+tkey+"&mobile="+mobile+"&content="+content+"&productid="+productid+"&xh"+xh;
 
         *//*http://www.ztsms.cn/sendNSms.do?username=用户名&password=密码& tkey=20160324151338&mobile=手机号&content=此次登录验证码123456【助通科技】&productid=产品id&xh=*//*
         //启动短信接口

@@ -1,4 +1,4 @@
-package com.myzone.util;
+package com.myzonespringboot.util;
 
 import java.io.IOException;
 import java.util.Date;

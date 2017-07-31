@@ -1,8 +1,8 @@
-package com.myzone.dao;
+package com.myzonespringboot.dao;
+
+import com.myzonespringboot.model.User;
 
 import java.util.List;
-
-import com.myzone.model.User;
 
 public interface IUserDao {
 	User login(String username,String password);

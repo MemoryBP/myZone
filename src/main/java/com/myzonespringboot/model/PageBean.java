@@ -1,8 +1,6 @@
-package com.myzone.model;
+package com.myzonespringboot.model;
 
 import java.util.List;
-
-import javax.persistence.Entity;
 
 
 public class PageBean {

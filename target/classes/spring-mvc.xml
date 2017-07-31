@@ -10,7 +10,7 @@
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 	<!-- 自动扫描的包注解 -->
-	<context:component-scan base-package="com.myzone" />
+	<context:component-scan base-package="com.myzonespringboot" />
 	<!-- 自动注入 -->
 	<mvc:annotation-driven />
 	<!-- 静态资源(js/image)的访问 -->

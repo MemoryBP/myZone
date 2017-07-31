@@ -1,4 +1,4 @@
-package com.myzone.model;
+package com.myzonespringboot.model;
 
 import javax.persistence.*;
 import java.io.Serializable;

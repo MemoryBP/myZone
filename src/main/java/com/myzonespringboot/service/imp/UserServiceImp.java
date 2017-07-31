@@ -1,14 +1,13 @@
-package com.myzone.service.imp;
+package com.myzonespringboot.service.imp;
 
-import java.util.List;
-
+import com.myzonespringboot.dao.IUserDao;
+import com.myzonespringboot.model.PageBean;
+import com.myzonespringboot.model.User;
+import com.myzonespringboot.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.myzone.dao.IUserDao;
-import com.myzone.model.PageBean;
-import com.myzone.model.User;
-import com.myzone.service.IUserService;
-import com.myzone.util.EncoderByMd5;
+
+import java.util.List;
 
 @Service("userService")
 public class UserServiceImp implements IUserService {
@@ -72,7 +71,7 @@ public class UserServiceImp implements IUserService {
 		int length = pageSize; // 每页记录数
 		int currentPage = PageBean.countCurrentPage(page);
 		List<User> list = userDao.queryForPage("from User", offset, length); // 该分页的记录
-		
+
 		// 把分页信息保存到Bean中
 		PageBean pageBean = new PageBean();
 		pageBean.setPageSize(pageSize);

@@ -1,20 +1,10 @@
-package com.myzone.model;
-
-import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.springframework.format.annotation.DateTimeFormat;
+package com.myzonespringboot.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.myzone.util.JsonDateSerializer;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name="customer")
@@ -35,19 +25,19 @@ public class User implements Serializable{
 	@Column(length = 20,nullable=false)
     private String username;
 	
-	@Column(length = 20,nullable=false)
+	@Column(nullable=false)
     private String password;
 	
 	@Column(length = 4)
     private int type;
-	
-	@Column
+
+    @Column(name="create_date")
     private Date createDate;
 	
-	@Column
+	@Column(name="update_date")
     private Date updateDate;
-	
-	@Column
+
+    @Column(name="id_card")
     private String idCard;
 	
 	@Column
