@@ -4,19 +4,20 @@ import com.myzonespringboot.model.PageBean;
 import com.myzonespringboot.model.User;
 import com.myzonespringboot.service.IUserService;
 import com.myzonespringboot.util.EncoderByMd5;
+import com.myzonespringboot.util.IPAddressUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
-@ResponseBody
+@Controller("userController")
 @RequestMapping("/index")
 public class UserController {
 	
@@ -31,7 +32,7 @@ public class UserController {
 		return "login";
 	}
 
-
+	@ResponseBody
 	@RequestMapping(value = "/customer", method = RequestMethod.GET)
 	public Map<String, Object> getUserName() {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -56,9 +57,10 @@ public class UserController {
 		return result;
 	}
 	
-	
+	@ResponseBody
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public Map<String, Object> login(String username, String password) {
+	public Map<String, Object> login(String username, String password, HttpServletRequest request) {
+		System.out.println("请求设备:"+request.getHeader("User-Agent"));
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			User user = userService.login(username, (EncoderByMd5.getMd5(password)));//md5加密
@@ -78,7 +80,7 @@ public class UserController {
 		
 		return result;
 	}
-	
+	@ResponseBody
 	@RequestMapping(value = "/userInfo", method = RequestMethod.POST)
 	public Map<String, Object> login(Long id) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -102,7 +104,7 @@ public class UserController {
 		
 		return result;
 	}
-	
+	@ResponseBody
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public Map<String, Object> register(@RequestBody User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -126,8 +128,8 @@ public class UserController {
 		
 		return result;
 	}
-	
-	
+
+	@ResponseBody
 	@RequestMapping(value = "/findall", method = RequestMethod.POST)
 	public Map<String, Object> findall() {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -151,8 +153,8 @@ public class UserController {
 		
 		return result;
 	}
-	
-	
+
+	@ResponseBody
 	@RequestMapping(value = "/de/{id}", method=RequestMethod.GET)
 	public Map<String, Object> de(@PathVariable("id") Long id) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -177,7 +179,7 @@ public class UserController {
 		
 		return result;
 	}
-	
+	@ResponseBody
 	@RequestMapping(value = "/update", method=RequestMethod.POST)
 	public Map<String, Object> update(@RequestBody User user) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -200,7 +202,7 @@ public class UserController {
 		System.out.println(result);
 		return result;
 	}
-	
+	@ResponseBody
 	@RequestMapping(value = "/clearAll", method=RequestMethod.GET)
 	public Map<String, Object> clear() {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -208,7 +210,7 @@ public class UserController {
 		result.put("code", 0);
 		return result;
 	}
-	
+	@ResponseBody
 	@RequestMapping(value = "/page", method=RequestMethod.GET)
 	public Map<String, Object> pageBean(@RequestParam("pageSize") int pageSize,@RequestParam("page") int page) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -232,6 +234,15 @@ public class UserController {
 			result.put("data", null);
 			return result;
 		}
+		return result;
+	}
+	@ResponseBody
+	@RequestMapping(value = "/location",method = RequestMethod.GET)
+	public Map<String,Object> getLocation(@RequestParam("ip") String ip){
+		Map<String,Object> result=new HashMap<String, Object>();
+		result.put("code",0);
+		result.put("data", IPAddressUtils.getAddress(ip));
+
 		return result;
 	}
 }

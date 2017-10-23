@@ -400,7 +400,6 @@
 						if (result.code == 0) {
 							if (result.data != null) {
 								$('#userLogined').text(result.data.username)
-                                getLocation()
 							} else {
 								layer.msg('请登录!')
 								setTimeout(function() {
@@ -437,19 +436,6 @@
 					layer.closeAll()
 				});
 			};
-
-			//获取用户位置
-			function getLocation() {
-                var url = 'http://chaxun.1616.net/s.php?type=ip&output=json&callback=?&_=' + Math.random();
-                $.getJSON(url, function (data) {
-                    console.log(data.Ip)
-                    if(data.Ip != ''){
-                        $.getJSON('index/location?ip='+data.Ip, function (result) {
-                            $('#location').text(result.data)
-                        });
-					}
-                });
-            }
 		</script>
 	</body>
 

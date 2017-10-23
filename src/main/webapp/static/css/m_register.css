@@ -1,0 +1,97 @@
+/*3d按钮样式*/
+
+a.css-3d-btn {
+	color: rgba(255, 255, 255, 1);
+	text-decoration: none;
+	background-color: #dd524d;
+	/*rgba(219, 87, 51, 1);*/
+	font-weight: 700;
+	font-size: 18px;
+	display: block;
+	padding: 10px 0;
+	/*4px;*/
+	border-radius: 80px;
+	/* let's use box shadows to make the button look more 3-dimensional */
+	box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
+	text-align: center;
+	-webkit-transition: all .1s ease;
+	-moz-transition: all .1s ease;
+	transition: all .1s ease;
+}
+
+a.css-3d-btn:active {
+	box-shadow: 0px 3px 0px rgba(219, 31, 5, 1), 0px 3px 6px rgba(0, 0, 0, .9);
+	position: relative;
+	top: 6px;
+}
+
+
+/*注册页面*/
+
+.mui-input-row>input {
+	border-radius: 80px;
+	padding: 0px 25px;
+}
+
+.mui-input-row a.btn {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 10;
+	font-size: 14px;
+	display: block;
+	padding: 10px 0;
+	text-align: center;
+	width: 40%;
+	color: #000000;
+}
+
+.mui-input-row a.btn:before {
+	height: 16px;
+	width: 0;
+	border-left: 1px solid rgba(0, 0, 0, .2);
+	position: absolute;
+	top: 50%;
+	left: 0;
+	margin-top: -8px;
+	z-index: 2;
+	content: '';
+}
+
+/* S 等待层 */
+#in{
+	position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    margin: -50px 0 0 -50px;
+}
+div.l {
+	margin: 20px 20px 0 0;
+	height: 100px;
+	width: 100px;
+	border-radius: 50px;
+	position: relative;
+	background-color: transparent;/*rgba(0,0,0,.5);*/
+}
+div.l[data-text]:before{
+	content: attr(data-text);
+	color:#00ff7f;
+	position: absolute;
+    left: 30px;
+    font-size: 14px;
+    bottom: 36px;
+    
+}
+.sonic {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+}
+/* E 等待层 */
+.mui-numbox .mui-input-numbox, .mui-numbox .mui-numbox-input{
+	text-overflow: clip;
+}

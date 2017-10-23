@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>注册</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link href="../static/css/mui.min.css" rel="stylesheet" />
+	<link href="../static/css/m_register.css" rel="stylesheet" />
+	<style>
+		html {
+			background:#f5af36 url(../static/img/bg_register.png) no-repeat;
+			background-size: cover;
+			width: 100%;
+			height: 100%;
+		}
+
+		body,
+		.mui-content {
+			margin: 85% 8% 0 8%;
+			background-color: transparent;
+		}
+
+		input::-webkit-input-placeholder {
+			/* WebKit browsers */
+			color: #bd7f13;
+			font-size: 12px;
+		}
+
+		.mui-content-padded {
+			margin: 0 10px 20px 10px;
+		}
+	</style>
+
+</head>
+
+<body>
+<div class="mui-content">
+	<div>
+		<div class="mui-input-row">
+			<input id="phone" type="text" class="mui-input-clear" placeholder="请输入手机号">
+		</div>
+		<div class="mui-input-row">
+			<input id="password1" type="password" class="mui-password mui-input-clear" placeholder="密码(6-16位英文字母与数字组合)">
+		</div>
+		<div class="mui-input-row">
+			<input id="password2" type="password" class="mui-password mui-input-clear" placeholder="请再次输入密码">
+		</div>
+		<div class="mui-input-row">
+			<a id="sendcaptcha" class="btn" data-click="1">发送验证码</a>
+			<input id="captcha" type="number" placeholder="请输入验证码">
+
+		</div>
+	</div>
+	<div class="mui-content-padded">
+		<a id='reg' class="css-3d-btn">立即领取</a>
+	</div>
+</div>
+
+<!-- 遮罩层 -->
+<div id="layer" class="mui-popup-backdrop mui-active" style="display: none;">
+	<div id="in"></div>
+</div>
+
+<script src="../static/js/mui.min.js"></script>
+<script src="../static/js/sonic.js"></script>
+<script src="../resources/lib/tools/rsa/jsbn.min.js"></script>
+<script src="../resources/lib/tools/rsa/prng4.min.js"></script>
+<script src="../resources/lib/tools/rsa/rng.min.js"></script>
+<script src="../resources/lib/tools/rsa/rsa.min.js"></script>
+<script src="../resources/lib/tools/base/base64.min.js"></script>
+<iframe id="wap_register" src="https://www.go-dai.com/wap/register" style="display: none;"></iframe>
+<script type="text/javascript">
+    mui.init()
+
+    /**
+     * 等待层
+     */
+    var loaders = {
+        width: 100,
+        height: 100,
+        stepsPerFrame: 1,
+        trailLength: 1,
+        pointDistance: .02,
+        fps: 30,
+        fillColor: '#068144',
+        step: function(point, index) {
+            this._.beginPath();
+            this._.moveTo(point.x, point.y);
+            this._.arc(point.x, point.y, index * 7, 0, Math.PI * 2, false);
+            this._.closePath();
+            this._.fill();
+        },
+        path: [
+            ['arc', 50, 50, 30, 0, 360]
+        ]
+    };
+
+	/* S 遮罩层 */
+    var d, a, container = document.getElementById('in');
+    d = document.createElement('div');
+    d.className = 'l';
+    d.setAttribute('data-text', '注册中');
+    a = new Sonic(loaders);
+    d.appendChild(a.canvas);
+    container.appendChild(d);
+    a.play();
+	/* E 遮罩层 */
+
+    var phone = mui('#phone')[0]
+    var pwd1 = mui('#password1')[0]
+    var pwd2 = mui('#password2')[0]
+    var captcha = mui('#captcha')[0]
+    mui.ready(function() {
+        var sendcaptcha = document.getElementById('sendcaptcha');
+        document.getElementById('sendcaptcha').addEventListener('tap', function() {
+            if(sendcaptcha.getAttribute('data-click') == 0) {
+                return false;
+            }
+            if(validateParame()) {
+                if(sendcaptcha.getAttribute('data-click') == 1) {
+                    //发送验证码请求
+                    getVerificationCode(phone.value)
+                }
+            }
+        });
+
+        document.getElementById('reg').addEventListener('tap', function() {
+            if(!validateParame()){return false;}
+            if(captcha.value.length == 0) {
+                mui.alert('请输入验证码!')
+                return false;
+            }
+
+            var modulus = mui('#wap_register')[0].contentWindow.modulus,
+                exponent = mui('#wap_register')[0].contentWindow.exponent;
+
+            var rsaKey = new RSAKey()
+            rsaKey.setPublic(b64tohex(modulus), b64tohex(exponent));
+            var parame = {
+                "mobile": phone.value,
+                "password": hex2b64(rsaKey.encrypt(pwd1.value)),
+                "mobileCaptcha": captcha.value,
+                "new": "wx"
+            };
+            //注册请求
+            registr(parame)
+        });
+    });
+
+    function checkMobile(tel) {
+        var isnotUsed = false;
+        //手机号是否被使用
+        mui.ajax('https://www.go-dai.com/api/customer/mobile?mobile=' + tel, {
+            dataType: "json", //服务器返回json格式数据
+            async: false,
+            type: 'get',
+            success: function(result) {
+                if(result != false) {
+                    isnotUsed = true;
+                }
+            },
+            error: function(xhr, type, errorThrown) {
+                mui.alert('请求失败!')
+            }
+        });
+        return isnotUsed;
+    }
+
+    //输入内容验证
+    function validateParame() {
+        if(phone.value.length == 0) {
+            mui.alert('请输入手机号!')
+            return false;
+        }
+        if(!(/^1[34578]\d{9}$/.test(phone.value))) {
+            mui.alert('电话号码格式错误');
+            return false;
+        }
+        if(!checkMobile(phone.value)) {
+            mui.alert('该手机号已存在!')
+            return false;
+        }
+        if(pwd1.value.length == 0) {
+            mui.alert('请输入密码!')
+            return false;
+        }
+        // 验证密码长度
+        if(pwd1.value.length < 6 || pwd1.value.length > 16) {
+            mui.alert('请输入6-16位密码');
+            return false;
+        }
+        if(!(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9a-zA-Z_]+$/.test(pwd1.value))) {
+            mui.alert('请输入6-16位英文字母与数字组合');
+            return false;
+        }
+        if(pwd2.value.length == 0) {
+            mui.alert('请输入确认密码!')
+            return false;
+        }
+        if(pwd2.value != pwd1.value) {
+            mui.alert('两次密码输入不正确!')
+            return false;
+        }
+        return true;
+    }
+
+    // 获取验证码
+    function getVerificationCode(tel) {
+        //请求验证码
+        mui.ajax('https://www.go-dai.com/api/customer/register/send-texting/', {
+            data: {
+                "mobile": tel
+            },
+            dataType: "json", //服务器返回json格式数据
+            type: 'POST',
+            success: function(result) {
+                if(result.type == "success") {
+                    //如果请求成功 点击次数设置为0 显示重发倒计时
+                    sendcaptcha.setAttribute('data-click', '0');
+                } else if(result.content=='已登录'){
+                    sendcaptcha.setAttribute('data-click', '1');
+                    mui.alert('该手机号已存在!')
+                }else{
+                    sendcaptcha.setAttribute('data-click', '1');
+                    mui.alert(result.content)
+                }
+                getInterval()
+            },
+            error: function(xhr, type, errorThrown) {
+                mui.alert('请求失败!')
+            }
+        });
+
+    }
+
+    // 获取验证码60秒倒计时
+    var interval;
+
+    function getInterval() {
+        var i = 60;
+        interval = setInterval(function() {
+            if(i > 0 && sendcaptcha.getAttribute('data-click') == 0) {
+                sendcaptcha.innerText = i-- + 's后获取';
+            } else {
+                clearInterval(interval);
+                sendcaptcha.setAttribute('data-click', '1');
+                document.getElementById('sendcaptcha').innerText = "发送验证码"
+            }
+        }, 1000);
+    }
+
+    //注册请求
+    function registr(parame) {
+        mui.ajax('https://www.go-dai.com/api/customer/register', {
+            data: parame,
+            dataType: 'json', //服务器返回json格式数据
+            type: 'POST',
+            timeout: 10000, //超时时间设置为10秒
+            beforeSend: function() {
+                document.getElementById('layer').style.display = 'block';
+            },
+            complete: function() {
+                document.getElementById('layer').style.display = 'none';
+            },
+            success: function(result) {
+                if(result.type == "success") {
+                    //跳转到下载页面
+                    mui.openWindow({
+                        url: 'register_download.html',
+                        id: 'download'
+                    });
+                } else if(result.content=='帐号已登录'){
+                    mui.alert('该手机号已存在!')
+                }else{mui.alert(result.content)}
+            },
+            error: function(xhr, type, errorThrown) {
+                mui.alert('注册失败，请刷新页面重试')
+            }
+        });
+    };
+</script>
+</body>
+
+</html>
