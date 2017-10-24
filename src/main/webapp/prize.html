@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			* {
+				padding: 0;
+				margin: 0 auto;
+			}
+			
+			.rotate {
+				width: 531px;
+				height: 531px;
+			}
+			
+			img {
+				display: inline-block;
+				position: absolute;
+			}
+			span{
+				display: block;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="rotate">
+			<img src="static/img/turntable-bg2.png" />
+			<img id="turntable2" src="static/img/turntable2.png" style="margin-left: 42px;margin-top: 40px;" />
+			<img id="pointer" src="static/img/pointer.png" style="margin-left: 178px;margin-top: 151px;cursor: pointer;" />
+		</div>
+		<div class="rotate">
+			<h1>抽奖结果:</h1>
+			<span id="result" style="word-warp:break-word;word-break:break-all"></span>
+		</div>
+
+		<script type="text/javascript" src="static/js/jquery-3.2.0.min.js"></script>
+		<script type="text/javascript" src="static/js/jquery.rotate.min.js"></script>
+		<script>
+			//360/7=51.4/2=25.7
+			var result=$('#result')
+			var count = 0;
+			var running = false;
+			var prizeCount=0;//1等奖奖品库存
+			var areas = [334.1, 282.7, 231.3, 179.9, 128.5, 77.1, 25.7]
+			$('#pointer').click(function() {
+				if(running)
+					return false;
+				count++;
+				if(count > 3) {
+					alert('3次已用完!')
+					return false;
+				}
+				var m = Math.random();
+				var choice=parseInt(areas.length * m);
+				console.log('length:' + areas.length + ';随机数:' + m + ';随机值:' + areas.length * m + ';整值:' + choice)
+				if(prizeCount==0&&choice==6)
+					choice=0
+				var rNum = areas[choice];
+				
+				running = true;
+				$("#turntable2").rotate({
+					duration: 3000,
+					angle: 0,
+					animateTo: rNum + 360 * 5,
+					callback: function() {
+						prize(rNum)
+						running = false;
+					}
+				});
+			});
+
+			function prize(rNum) {
+				switch(rNum) {
+					case 25.7:
+						result.text(result.text()+'\r\n'+'1等奖')
+						break;
+					case 77.1:
+						result.text(result.text()+'\r\n'+'2等奖')
+						break;
+					case 128.5:
+						result.text(result.text()+'\r\n'+'3等奖')
+						break;
+					case 179.9:
+						result.text(result.text()+'\r\n'+'4等奖')
+						break;
+					case 231.3:
+						result.text(result.text()+'\r\n'+'5等奖')
+						break;
+					case 282.7:
+						result.text(result.text()+'\r\n'+'6等奖')
+						break;
+					case 334.1:
+						result.text(result.text()+'\r\n'+'未中奖')
+						break;
+				}
+			}
+		</script>
+	</body>
+
+</html>
