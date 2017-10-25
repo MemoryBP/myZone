@@ -1,9 +1,11 @@
 package com.myzonespringboot.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.node.DecimalNode;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -32,7 +34,7 @@ public class Prize implements Serializable {
     /**
      * 类型
      */
-    private Integer type;
+    private Integer code;
 
     /**
      * 是否启用
@@ -43,6 +45,11 @@ public class Prize implements Serializable {
      * 库存
      */
     private Integer size;
+
+    /**
+     * 中奖率
+     */
+    private BigDecimal percent;
 
     /**
      * 可使用开始时间
@@ -92,12 +99,12 @@ public class Prize implements Serializable {
         this.memo = memo;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getCode() {
+        return code;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
     public boolean isEnable() {
@@ -115,6 +122,15 @@ public class Prize implements Serializable {
     public void setSize(Integer size) {
         this.size = size;
     }
+
+    public BigDecimal getPercent() {
+        return percent;
+    }
+
+    public void setPercent(BigDecimal percent) {
+        this.percent = percent;
+    }
+
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     public Date getUseDate() {
         return useDate;

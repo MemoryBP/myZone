@@ -30,8 +30,8 @@
 	<!-- 加载数据源 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<!--<property name="url" value="jdbc:mysql://106.14.166.40:3306/myZone?useUnicode=true&amp;characterEncoding=UTF-8&amp;createDatabaseIfNotExist=true" />-->
-		<property name="url" value="jdbc:mysql://localhost:3306/myzone?useUnicode=true&amp;characterEncoding=UTF-8&amp;createDatabaseIfNotExist=true" />
+		<property name="url" value="jdbc:mysql://106.14.166.40:3306/myZone?useUnicode=true&amp;characterEncoding=UTF-8&amp;createDatabaseIfNotExist=true" />
+		<!--<property name="url" value="jdbc:mysql://localhost:3306/myzone?useUnicode=true&amp;characterEncoding=UTF-8&amp;createDatabaseIfNotExist=true" />-->
 		<property name="username" value="root" />
 		<property name="password" value="root" />
 		<property name="maxActive" value="100" />
