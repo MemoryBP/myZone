@@ -9,8 +9,6 @@ import java.util.Date;
 @Entity
 @Table(name="customer")
 public class User implements Serializable{
-    
-
 	/**
 	 * 
 	 */

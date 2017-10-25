@@ -12,8 +12,13 @@
             padding: 0;
             margin: 0 auto;
         }
+        body{
+            background-image: url("static/img/bg_tree.jpg");
+            background-size: 100% 100%;
+        }
 
         .rotate {
+            margin-top: 20px;
             width: 531px;
             height: 531px;
         }
@@ -26,12 +31,17 @@
         span {
             display: block;
         }
-        .result{
+
+        .result {
+            border: transparent;
             width: 531px;
             font-size: 15px;
-            font-weight: 300;
+            font-weight: 700;
+            margin-left: 20px;
+            line-height: 30px;
             color: red;
-            height: 20%;
+            height: 100%;
+            background-color: transparent;
         }
     </style>
 </head>
@@ -44,21 +54,28 @@
 </div>
 <div class="rotate">
     <h1>抽奖结果:</h1>
-    <textarea id="result" class="result" rows="3" cols="20">
+    <textarea id="result" class="result" readonly="readonly" rows="3" cols="20">
     </textarea>
 </div>
 
 <script type="text/javascript" src="static/js/jquery-3.2.0.min.js"></script>
 <script type="text/javascript" src="static/js/jquery.rotate.min.js"></script>
+<script src="static/js/layer.js"></script>
 <script>
     //360/7=51.4/2=25.7
     var result = $('#result')
     var count = 0;
     var running = false;
-    var prizeCount = 0;//1等奖奖品库存
     var areas = [334.1, 282.7, 231.3, 179.9, 128.5, 77.1, 25.7]
     var msg = '';
+    var username='';
+
+    /*是否登录*/
+    getLoginedUser();
+
     $('#pointer').click(function () {
+        /*是否登录*/
+        getLoginedUser();
         if (running)
             return false;
         /*count++;*/
@@ -66,58 +83,96 @@
             alert('3次已用完!')
             return false;
         }
-        var m = Math.random();
-        var choice = parseInt(areas.length * m);
-        console.log('length:' + areas.length + ';随机数:' + m + ';随机值:' + areas.length * m + ';整值:' + choice)
-        if (prizeCount == 0 && choice == 6)
-            choice = 0
-        var rNum = areas[choice];
-
-        running = true;
-        $("#turntable2").rotate({
-            duration: 3000,
-            angle: 0,
-            animateTo: rNum + 360 * 5,
-            callback: function () {
-                prize(rNum)
-                running = false;
+        var choice=0;
+        $.getJSON('index/prize', function (result) {
+            if (result.code == 0) {
+                choice = result.data
+                console.log(choice)
             }
-        });
+            if (choice == null)
+                choice = 0;
+            var rNum = areas[choice];
+            console.log(choice+','+rNum)
+
+            running = true;
+            $("#turntable2").rotate({
+                duration: 3000,
+                angle: 0,
+                animateTo: rNum + 360 * 5,
+                callback: function () {
+                    prize(rNum)
+                    running = false;
+                }
+            });
+        })
     });
 
     function prize(rNum) {
         var myDate = new Date().toLocaleString();
         switch (rNum) {
             case 25.7:
-                msg += myDate+':1等奖' + '\r\n';
+                layer.msg('恭喜获得一等奖!')
+                msg +=username + ':恭喜获得一等奖 ' + myDate + '\r\n';
                 result.text(msg)
                 break;
             case 77.1:
-                msg += myDate+':2等奖' + '\r\n';
+                layer.msg('恭喜获得二等奖!')
+                msg +=username + ':恭喜获得二等奖 ' + myDate + '\r\n';
                 result.text(msg)
                 break;
             case 128.5:
-                msg += myDate+':3等奖' + '\r\n';
+                layer.msg('恭喜获得三等奖!')
+                msg +=username + ':恭喜获得三等奖 ' + myDate + '\r\n';
                 result.text(msg)
                 break;
             case 179.9:
-                msg += myDate+':4等奖' + '\r\n';
+                layer.msg('恭喜获得四等奖!')
+                msg +=username + ':恭喜获得四等奖 ' + myDate + '\r\n';
                 result.text(msg)
                 break;
             case 231.3:
-                msg += myDate+':5等奖' + '\r\n';
+                layer.msg('恭喜获得五等奖!')
+                msg +=username + ':恭喜获得五等奖 ' + myDate + '\r\n';
                 result.text(msg)
                 break;
             case 282.7:
-                msg += myDate+':6等奖' + '\r\n';
+                layer.msg('恭喜获得六等奖!')
+                msg +=username + ':恭喜获得六等奖 ' + myDate + '\r\n';
                 result.text(msg)
                 break;
             case 334.1:
-                msg += myDate+':未中奖' + '\r\n';
+                layer.msg('运气不佳未中奖!')
+                msg +=username + ':未中奖 ' + myDate + '\r\n';
                 result.text(msg)
                 break;
         }
-    }
+    };
+
+    function getLoginedUser() {
+        $.ajax({
+            type : 'get',
+            url : 'index/customer',
+            dataType : 'json',
+            success : function(result) {
+                if (result.code == 0) {
+                    if (result.data != null) {
+                        username=result.data.username;
+                    } else {
+                        layer.msg('请登录!')
+                        setTimeout(function() {
+                            window.location.href = 'login.html';
+                        }, 1000);
+                    }
+
+                } else {
+                    layer.msg('请登录!')
+                    setTimeout(function() {
+                        window.location.href = 'login.html';
+                    }, 1000);
+                }
+            }
+        })
+    };
 </script>
 </body>
 
