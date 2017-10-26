@@ -13,10 +13,11 @@ import java.util.Date;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "prize_record_sequence")
 public class Prize_record implements Serializable {
 
+    @Transient
     private static final long serialVersionUID = -857616769420775115L;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)//不创建hibernate_sequence表 // 自动生成,当你插入时会自动更新idOK??? 恩
+    @GeneratedValue(strategy= GenerationType.IDENTITY)//不创建hibernate_sequence表 // 自动生成
     @Column(length = 20)
     private Long id;
 

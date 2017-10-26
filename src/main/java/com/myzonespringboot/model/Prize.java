@@ -15,10 +15,11 @@ import java.util.Date;
 @SequenceGenerator(name = "sequenceGenerator", sequenceName = "prize_sequence")
 public class Prize implements Serializable {
 
+    @Transient
     private static final long serialVersionUID = -3116771718205435774L;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)//不创建hibernate_sequence表 // 自动生成,当你插入时会自动更新idOK??? 恩
+    @GeneratedValue(strategy= GenerationType.IDENTITY)//不创建hibernate_sequence表 // 自动生成
     @Column(length = 20)
     private Long id;
     /**
@@ -47,8 +48,14 @@ public class Prize implements Serializable {
     private Integer size;
 
     /**
+     * 剩余
+     */
+    private Integer remain;
+
+    /**
      * 中奖率
      */
+    @Column(precision = 23, scale = 6)
     private BigDecimal percent;
 
     /**
@@ -122,6 +129,15 @@ public class Prize implements Serializable {
     public void setSize(Integer size) {
         this.size = size;
     }
+
+    public Integer getRemain() {
+        return remain;
+    }
+
+    public void setRemain(Integer remain) {
+        this.remain = remain;
+    }
+
 
     public BigDecimal getPercent() {
         return percent;
