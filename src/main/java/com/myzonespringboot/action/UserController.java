@@ -6,7 +6,6 @@ import com.myzonespringboot.service.IUserService;
 import com.myzonespringboot.util.EncoderByMd5;
 import com.myzonespringboot.util.IPAddressUtils;
 import com.myzonespringboot.util.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,7 @@ import java.util.Map;
 @RequestMapping("/index")
 public class UserController {
 
-    @Autowired
+    @Resource(name = "userService")
     private IUserService userService;
 
     @Resource

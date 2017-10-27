@@ -33,6 +33,10 @@
 			<param-name>encoding</param-name>
 			<param-value>utf-8</param-value>
 		</init-param>
+		<!--<init-param>
+			<param-name>flushMode</param-name>
+			<param-value>AUTO</param-value>
+		</init-param>-->
 		<!-- 强制编码 -->
 		<!--<init-param>
 			<param-name>forceEncoding</param-name>

@@ -349,6 +349,7 @@
 						success : function(result) {
 							if (result.code == 0) {
 								getDel(row)
+								layer.msg("删除成功!")
 							} else {
 								layer.msg(result.msg);
 							}

@@ -1,17 +1,19 @@
 package com.myzonespringboot.service.imp;
 
 import com.myzonespringboot.dao.IUserDao;
+import com.myzonespringboot.dao.imp.BaseDaoImp;
 import com.myzonespringboot.model.PageBean;
 import com.myzonespringboot.model.User;
 import com.myzonespringboot.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service("userService")
-public class UserServiceImp implements IUserService {
-	@Autowired
+public class UserServiceImp extends BaseDaoImp implements IUserService {
+	@Resource(name = "userDao")
 	private IUserDao userDao;
 
 	@Override
@@ -21,8 +23,7 @@ public class UserServiceImp implements IUserService {
 
 	@Override
 	public User register(User user) {
-		/*user.setPassword(EncoderByMd5.getMd5(user.getPassword()));//md5加密
-*/		return userDao.register(user);
+		return userDao.register(user);
 	}
 
 	@Override

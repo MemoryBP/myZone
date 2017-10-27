@@ -5,6 +5,8 @@ import org.hibernate.*;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -76,6 +78,8 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
      * @return
      */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW )
+    /*@Transactional(readOnly = false)*/
     public Object save(Object obj) {
         return getHibernateTemplate().save(obj);
     }
@@ -142,6 +146,7 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
      * @param obj
      */
     @Override
+    @Transactional(readOnly = false)
     public void delete(Object obj) {
         getHibernateTemplate().delete(obj);
     }

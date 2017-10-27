@@ -1,9 +1,7 @@
 package com.myzonespringboot.service.imp;
 
 import com.myzonespringboot.dao.IBaseDao;
-import com.myzonespringboot.dao.imp.BaseDaoImp;
 import com.myzonespringboot.service.IBaseService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.List;
  */
 public class BaseServiceImpl implements IBaseService {
 
-    @Autowired
+    @Resource(name = "baseDaoImp")
     private IBaseDao baseDao;
 
     @Override

@@ -5,7 +5,7 @@ import com.myzonespringboot.model.User;
 
 import java.util.List;
 
-public interface IUserService {
+public interface IUserService extends IBaseService {
 	User login(String username,String password);
 	
 	User register(User user);

@@ -69,13 +69,13 @@
     </bean>  
 	  
     <aop:config>  
-        <aop:pointcut id="productServiceMethods" expression="execution(* com.myzonespringboot.service..*.*(..))" />
+        <aop:pointcut id="productServiceMethods" expression="execution(* com.myzonespringboot.dao.*.*(..))" />
         <aop:advisor advice-ref="txAdvice" pointcut-ref="productServiceMethods" />  
     </aop:config>  
      
     <tx:advice id="txAdvice" transaction-manager="transactionManager">  
         <tx:attributes>  
-        	<tx:method name="save*"   propagation="REQUIRED" />
+        	<!--<tx:method name="save*"   propagation="REQUIRED" read-only="false" />
 			<tx:method name="add*"    propagation="REQUIRED" />
 			<tx:method name="create*" propagation="REQUIRED" />
 			<tx:method name="insert*" propagation="REQUIRED" />
@@ -84,7 +84,8 @@
 			<tx:method name="del*"    propagation="REQUIRED" />
 			<tx:method name="remove*" propagation="REQUIRED" />
 			<tx:method name="put*"    propagation="REQUIRED" />
-            <tx:method name="*" propagation="SUPPORTS" read-only="true" />  
+            <tx:method name="*" propagation="SUPPORTS" read-only="true" />-->
+			<tx:method name="*" propagation="REQUIRED" />
         </tx:attributes>  
     </tx:advice> 
 	

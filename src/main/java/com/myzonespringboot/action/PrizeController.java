@@ -2,6 +2,7 @@ package com.myzonespringboot.action;
 
 import com.myzonespringboot.model.Prize;
 import com.myzonespringboot.model.User;
+import com.myzonespringboot.service.IPrizeService;
 import com.myzonespringboot.util.Message;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +23,28 @@ public class PrizeController {
     @Resource
     private HttpSession session;
 
+    @Resource(name = "prizeServiceImp")
+    private IPrizeService prizeService;
+
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
     Map<String, Object> prize() {
         User user = (User) session.getAttribute("user");
+        List<Prize> prizeList=prizeService.getManyObjects("from Prize where name='一等奖'");
+        for (Prize prize:prizeList){
+            System.out.println(prize.getName());
+        }
         return user == null ? Message.failure("请先登录!") : Message.success(startPrize());
+    }
+
+    public void testPriz(){
+        Prize prize=new Prize();
+        prize.setCode(8);
+        prize.setName("测试");
+        prize.setEnable(true);
+        prize.setCreateDate(new Date());
+        prize.setMemo("测试");
+        prizeService.save(prize);
     }
 
     /**

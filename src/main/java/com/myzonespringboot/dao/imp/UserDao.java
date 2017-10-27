@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.myzonespringboot.dao.IBaseDao;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,26 +15,32 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myzonespringboot.dao.IUserDao;
 import com.myzonespringboot.model.User;
 
+import javax.annotation.Resource;
+
+
 @Repository("userDao")
-public class UserDao implements IUserDao {
+public class UserDao extends BaseDaoImp implements IUserDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	@Resource(name = "baseDaoImp")
+	private IBaseDao baseDao;
+
 	@Override
-	@Transactional(readOnly = true)
 	public User login(String username, String password) {
 		/*
 		 * String hql = "from User u where u.username = '" + username +
 		 * "' and u.password = '" + password + "'";
 		 */
-		try {
-			/*
+		/*try {
+			*//*
 			 * getCurrentSession()创建的Session在commit或rollback后会自动关闭，采用OpenSession
 			 * ()必须手动关闭。
 			 * autoCloseSessionEnabled，flushBeforeCompletionEnabled都为true，
 			 * 并且session会同sessionFactory组成一个map以sessionFactory为主键绑定到当前线程。
 			 * openSession()反之
-			 */
+			 *//*
+
 			Session session = sessionFactory.getCurrentSession();
 			List<?> users = session.createCriteria(User.class).add(Restrictions.eq("username", username))
 					.add(Restrictions.eq("password", password)).list();
@@ -45,15 +51,26 @@ public class UserDao implements IUserDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		}
+		}*/
 
-		return null;
+		return (User) getOneObject("from User where username=? and password=?",new String[]{username,password});
 	}
 
 	@Override
 	@Transactional(readOnly = false)
 	public User register(User user) {
+
 		try {
+			/*User user1=(User) save(user);
+			if(user1!=null)
+				return user1;*/
+			saveOrUpdate(user);
+			return user;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		/*try {
 			Session session = sessionFactory.getCurrentSession();
 			Serializable save = session.save(user);
 			// 你只要判断不是null就行了
@@ -62,7 +79,7 @@ public class UserDao implements IUserDao {
 			}
 		} catch (Exception e) {
 			return null;
-		}
+		}*/
 		return null;
 	}
 
@@ -70,6 +87,12 @@ public class UserDao implements IUserDao {
 	@Transactional(readOnly = false)
 	public int deleteByPrimaryKey(Long id) {
 		try {
+			bulkUpdate("delete from User where id=?",new Long[]{id});
+		}catch (Exception e){
+			return 1;
+		}
+
+		/*try {
 			Session session = sessionFactory.getCurrentSession();
 			int reval = session.createQuery("delete User u where u.id=?").setParameter(0, id).executeUpdate();// 返回更新条数
 			if (reval > 0) {
@@ -77,7 +100,7 @@ public class UserDao implements IUserDao {
 			}
 		} catch (Exception e) {
 			return 0;
-		}
+		}*/
 		return 0;
 	}
 
@@ -96,7 +119,10 @@ public class UserDao implements IUserDao {
 	@Override
 	@Transactional(readOnly = true)
 	public User selectByPrimaryKey(Long id) {
-		Session session = null;
+		User user=(User)getOneObject("from User where id=?",new Long[]{id});
+		if(user!=null)
+			return user;
+		/*Session session = null;
 		try {
 			session = sessionFactory.getCurrentSession();
 			List<User> users = session.createCriteria(User.class).add(Restrictions.eq("id", id)).list();
@@ -106,7 +132,7 @@ public class UserDao implements IUserDao {
 		} catch (Exception e) {
 			session.close();
 			return null;
-		}
+		}*/
 		return null;
 	}
 
