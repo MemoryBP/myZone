@@ -10,14 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by cgq on 2017/10/26.
  */
+@SuppressWarnings("unchecked")
 @Repository("baseDaoImp")
-public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
+public class BaseDaoImp<T,PK extends Serializable> extends HibernateDaoSupport implements IBaseDao<T,PK>  {
 
     @Resource
     private SessionFactory sessionFactory;
@@ -28,15 +31,33 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
     }
 
     /**
+     * 映射实体类
+     */
+    private Class<T> tclazz;
+    private Class<PK> idclazz;
+
+    public BaseDaoImp(){
+        this.tclazz = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        this.idclazz = (Class<PK>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+    }
+    /*public Class<PK> getIdclazz() {
+        return idclazz;
+    }
+    public Class<T> getTclazz() {
+        return tclazz;
+    }*/
+
+
+    /**
      *
      * 功能描述: 获取多个结果
      *
-     * @param hql
      * @return
      */
     @Override
-    public List getManyObjects(String hql) {
-        return getHibernateTemplate().find(hql);
+    public List<T> getManyObjects() {
+        System.out.println(tclazz.getSimpleName());
+        return (List<T>) getHibernateTemplate().find("from "+tclazz.getSimpleName());
     }
 
     /**
@@ -48,8 +69,8 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
      * @return
      */
     @Override
-    public List getManyObjects(String hql, Object[] args) {
-        return getHibernateTemplate().find(hql, args);
+    public List<T> getManyObjects(String hql, Object[] args) {
+        return (List<T>) getHibernateTemplate().find(hql, args);
     }
 
     /**
@@ -61,8 +82,8 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
      * @return
      */
     @Override
-    public Object getOneObject(String hql, Object[] args) {
-        List list = getHibernateTemplate().find(hql, args);
+    public T getOneObject(String hql, Object[] args) {
+        List<T> list = (List<T>) getHibernateTemplate().find(hql, args);
         if (list == null || list.size() == 0) {
             return null;
         } else {
@@ -74,14 +95,13 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
      *
      * 功能描述: 保存一条记录
      *
-     * @param obj
      * @return
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW )
     /*@Transactional(readOnly = false)*/
-    public Object save(Object obj) {
-        return getHibernateTemplate().save(obj);
+    public T save(T t) {
+        return (T)getHibernateTemplate().save(t);
     }
 
     /**
@@ -92,12 +112,12 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
      * @return
      */
     @Override
-    public List saveAll(List objs) {
+    public List<T> saveAll(List<T> objs) {
         if (objs == null || objs.size() == 0) {
             return null;
         }
-        List list = new ArrayList();
-        for (Object ob : objs) {
+        List<T> list = new ArrayList();
+        for (T ob : objs) {
             list.add(save(ob));
         }
         return list;
@@ -107,48 +127,44 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
      *
      * 功能描述: 更新一条实体
      *
-     * @param obj
      * @return
      */
     @Override
-    public void update(Object obj) {
-        getHibernateTemplate().update(obj);
+    public void update(T t) {
+        getHibernateTemplate().update(t);
     }
 
     /**
      *
      * 功能描述: 更新/保存一条实体
      *
-     * @param obj
      * @return
      */
     @Override
-    public void merge(Object obj) {
-        getHibernateTemplate().merge(obj);
+    public void merge(T t) {
+        getHibernateTemplate().merge(t);
     }
 
     /**
      *
      * 功能描述: 更新/保存一条实体
      *
-     * @param obj
      * @return
      */
     @Override
-    public void saveOrUpdate(Object obj) {
-        getHibernateTemplate().saveOrUpdate(obj);
+    public void saveOrUpdate(T t) {
+        getHibernateTemplate().saveOrUpdate(t);
     }
 
     /**
      *
      * 功能描述: 删除实体
      *
-     * @param obj
      */
     @Override
     @Transactional(readOnly = false)
-    public void delete(Object obj) {
-        getHibernateTemplate().delete(obj);
+    public void delete(T t) {
+        getHibernateTemplate().delete(t);
     }
 
     /**
@@ -158,7 +174,7 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
      * @param list
      */
     @Override
-    public void saveManyObjects(List list) {
+    public void saveManyObjects(List<T> list) {
         if (list == null || list.size() == 0) {
             return;
         }
@@ -238,8 +254,8 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
      * @return
      */
     @Override
-    public List executeNativeSqlQuery(final String sql, final Object[] params) {
-        List list = (List) this.getHibernateTemplate().execute(new HibernateCallback() {
+    public List<T> executeNativeSqlQuery(final String sql, final Object[] params) {
+        List<T> list = (List<T>) this.getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) {
                 Query query = session.createSQLQuery(sql);
                 if (params != null && params.length > 0) {
@@ -254,7 +270,7 @@ public class BaseDaoImp extends HibernateDaoSupport implements IBaseDao  {
     }
 
     @Override
-    public List findByPage(String sql, int firstRow, int maxRow) {
+    public List<T> findByPage(String sql, int firstRow, int maxRow) {
         return null;
     }
 

@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 @Service("userService")
-public class UserServiceImp extends BaseDaoImp implements IUserService {
+public class UserServiceImp extends BaseDaoImp<User,Long> implements IUserService {
 	@Resource(name = "userDao")
 	private IUserDao userDao;
 

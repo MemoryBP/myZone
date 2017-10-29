@@ -42,7 +42,7 @@ public class IPAddressUtils {
         InputStream in = httpConn.getInputStream();
         String content = IOUtils.toString(httpConn.getInputStream(), "UTF-8");
         JSONObject js = JSON.parseObject(content);
-        in.close();
+        in.close();// gson
         httpConn.disconnect();
         return "0".equals(js.getString("code")) ? js.getJSONObject("data") : null;
         /*return "0".equals(js.getString("status")) ? js.getJSONObject("content") : null;*/

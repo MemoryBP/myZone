@@ -4,7 +4,7 @@ import com.myzonespringboot.model.User;
 
 import java.util.List;
 
-public interface IUserDao extends IBaseDao {
+public interface IUserDao extends IBaseDao<User,Long> {
 	User login(String username,String password);
 	
 	User register(User user);

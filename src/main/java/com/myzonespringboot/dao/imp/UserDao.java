@@ -19,12 +19,10 @@ import javax.annotation.Resource;
 
 
 @Repository("userDao")
-public class UserDao extends BaseDaoImp implements IUserDao {
+public class UserDao extends BaseDaoImp<User,Long> implements IUserDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	@Resource(name = "baseDaoImp")
-	private IBaseDao baseDao;
 
 	@Override
 	public User login(String username, String password) {

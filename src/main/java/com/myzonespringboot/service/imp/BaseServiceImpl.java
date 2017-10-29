@@ -4,63 +4,80 @@ import com.myzonespringboot.dao.IBaseDao;
 import com.myzonespringboot.service.IBaseService;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
  * Created by cgq on 2017/10/26.
  */
-public class BaseServiceImpl implements IBaseService {
+public class BaseServiceImpl<T,PK extends Serializable> implements IBaseService<T,PK> {
 
     @Resource(name = "baseDaoImp")
-    private IBaseDao baseDao;
+    private IBaseDao<T,PK> baseDao;
 
-    @Override
-    public List getManyObjects(String hql) {
-        return baseDao.getManyObjects(hql);
+    private Class<?> tclazz;
+    private Class<?> idclazz;
+    public BaseServiceImpl() {
+        this.tclazz = (Class<?>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        this.idclazz = (Class<?>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+    }
+
+    public void setTclazz(Class<?> tclazz) {
+        this.tclazz = tclazz;
+    }
+
+    public void setIdclazz(Class<?> idclazz) {
+        this.idclazz = idclazz;
     }
 
     @Override
-    public List getManyObjects(String hql, Object[] args) {
-        return baseDao.getManyObjects(hql,args);
+    public List<T> getManyObjects() {
+        return baseDao.getManyObjects();
     }
 
     @Override
-    public Object getOneObject(String hql, Object[] args) {
-        return baseDao.getOneObject(hql,args);
+    public List<T> getManyObjects(String hql, Object[] args) {
+        return baseDao.getManyObjects(hql, args);
     }
 
     @Override
-    public Object save(Object obj) {
-        return baseDao.save(obj);
+    public T getOneObject(String hql, Object[] args) {
+        return baseDao.getOneObject(hql, args);
     }
 
     @Override
-    public List saveAll(List objs) {
+    public T save(T t) {
+        return baseDao.save(t);
+    }
+
+    @Override
+    public List<T> saveAll(List<T> objs) {
         return baseDao.saveAll(objs);
     }
 
     @Override
-    public void update(Object obj) {
-        baseDao.update(obj);
+    public void update(T t) {
+        baseDao.update(t);
     }
 
     @Override
-    public void merge(Object obj) {
-        baseDao.merge(obj);
+    public void merge(T t) {
+        baseDao.merge(t);
     }
 
     @Override
-    public void saveOrUpdate(Object obj) {
-        baseDao.saveOrUpdate(obj);
+    public void saveOrUpdate(T t) {
+        baseDao.saveOrUpdate(t);
     }
 
     @Override
-    public void delete(Object obj) {
-        baseDao.delete(obj);
+    public void delete(T t) {
+        baseDao.delete(t);
     }
 
     @Override
-    public void saveManyObjects(List list) {
+    public void saveManyObjects(List<T> list) {
         baseDao.saveManyObjects(list);
     }
 
@@ -71,7 +88,7 @@ public class BaseServiceImpl implements IBaseService {
 
     @Override
     public int bulkUpdate(String hql, Object[] params) {
-        return baseDao.bulkUpdate(hql,params);
+        return baseDao.bulkUpdate(hql, params);
     }
 
     @Override
@@ -81,17 +98,17 @@ public class BaseServiceImpl implements IBaseService {
 
     @Override
     public void executeNativeSqlUpdate(String sql, Object[] params) {
-        baseDao.executeNativeSqlUpdate(sql,params);
+        baseDao.executeNativeSqlUpdate(sql, params);
     }
 
     @Override
-    public List executeNativeSqlQuery(String sql, Object[] params) {
-        return baseDao.executeNativeSqlQuery(sql,params);
+    public List<T> executeNativeSqlQuery(String sql, Object[] params) {
+        return baseDao.executeNativeSqlQuery(sql, params);
     }
 
     @Override
-    public List findByPage(String sql, int firstRow, int maxRow) {
-        return baseDao.findByPage(sql,firstRow,maxRow);
+    public List<T> findByPage(String sql, int firstRow, int maxRow) {
+        return baseDao.findByPage(sql, firstRow, maxRow);
     }
 
     @Override
@@ -100,12 +117,14 @@ public class BaseServiceImpl implements IBaseService {
     }
 
     @Override
-    public List executeNativeSqlQueryForClass(String sql, Object[] params, Class clazz) {
-        return baseDao.executeNativeSqlQueryForClass(sql,params,clazz);
+    public List<T> executeNativeSqlQueryForClass(String sql, Object[] params, Class clazz) {
+        return baseDao.executeNativeSqlQueryForClass(sql, params, clazz);
     }
 
     @Override
-    public List findMapBySql(String sql) {
+    public List<T> findMapBySql(String sql) {
         return baseDao.findMapBySql(sql);
     }
+
+
 }

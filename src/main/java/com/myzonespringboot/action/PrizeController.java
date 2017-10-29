@@ -26,11 +26,13 @@ public class PrizeController {
     @Resource(name = "prizeServiceImp")
     private IPrizeService prizeService;
 
+
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
     Map<String, Object> prize() {
         User user = (User) session.getAttribute("user");
-        List<Prize> prizeList=prizeService.getManyObjects("from Prize where name='一等奖'");
+        // 描述一下 获取Prize表所有
+        List<Prize> prizeList=prizeService.getManyObjects();//
         for (Prize prize:prizeList){
             System.out.println(prize.getName());
         }
@@ -56,34 +58,42 @@ public class PrizeController {
         Map<String, Object> prizeMsg = new HashMap<String, Object>();
         int num = (int) (Math.random() * 10000 + 1);//产生1~10001随机数 [1,10001)
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        Prize prize=null;
         if (num == 1) {
+            prize=(Prize) prizeService.getOneObject("from Prize where name=?",new String[]{"一等奖"});
             prizeMsg.put("msg", "恭喜获得一等奖!");
             prizeMsg.put("choice", 1);
-            prizeMsg.put("content", "恭喜获得一等奖! " + date);
+            prizeMsg.put("content", "恭喜获得一等奖! " +prize.getMemo() + " "+ date);
         } else if (num > 1 && num <= 10) {
+            prize=(Prize) prizeService.getOneObject("from Prize where name=?",new String[]{"二等奖"});
             prizeMsg.put("msg", "恭喜获得二等奖!");
             prizeMsg.put("choice", 2);
-            prizeMsg.put("content", "恭喜获得二等奖! " + date);
+            prizeMsg.put("content", "恭喜获得二等奖! " +prize.getMemo() + " " + date);
         } else if (num > 10 && num <= 110) {
+            prize=(Prize) prizeService.getOneObject("from Prize where name=?",new String[]{"三等奖"});
             prizeMsg.put("msg", "恭喜获得三等奖!");
             prizeMsg.put("choice", 3);
-            prizeMsg.put("content", "恭喜获得三等奖! " + date);
+            prizeMsg.put("content", "恭喜获得三等奖! " +prize.getMemo() + " " + date);
         } else if (num > 110 && num <= 310) {
+            prize=(Prize) prizeService.getOneObject("from Prize where name=?",new String[]{"四等奖"});
             prizeMsg.put("msg", "恭喜获得四等奖!");
             prizeMsg.put("choice", 4);
-            prizeMsg.put("content", "恭喜获得四等奖! " + date);
+            prizeMsg.put("content", "恭喜获得四等奖! " +prize.getMemo() + " " + date);
         } else if (num > 310 && num <= 610) {
+            prize=(Prize) prizeService.getOneObject("from Prize where name=?",new String[]{"五等奖"});
             prizeMsg.put("msg", "恭喜获得五等奖!");
             prizeMsg.put("choice", 5);
-            prizeMsg.put("content", "恭喜获得五等奖! " + date);
+            prizeMsg.put("content", "恭喜获得五等奖! " +prize.getMemo() + " " + date);
         } else if (num > 610 && num <= 1110) {
+            prize=(Prize) prizeService.getOneObject("from Prize where name=?",new String[]{"六等奖"});
             prizeMsg.put("msg", "恭喜获得六等奖!");
             prizeMsg.put("choice", 6);
-            prizeMsg.put("content", "恭喜获得六等奖! " + date);
+            prizeMsg.put("content", "恭喜获得六等奖! " +prize.getMemo() + " " + date);
         } else {
+            prize=(Prize) prizeService.getOneObject("from Prize where name=?",new String[]{"未中奖"});
             prizeMsg.put("msg", "未中奖!");
             prizeMsg.put("choice", 0);
-            prizeMsg.put("content", "未中奖! " + date);
+            prizeMsg.put("content", "未中奖! " +prize.getMemo() + " "  + date);
         }
         return prizeMsg;
     }

@@ -1,18 +1,18 @@
 package com.myzonespringboot.dao;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by cgq on 2017/10/26.
  */
-public interface IBaseDao {
+public interface IBaseDao<T,PK extends Serializable> {
     /**
      *
      * 功能描述: 获取多个结果
      *
-     * @param hql
      * @return
      */
-    List getManyObjects(String hql);
+    List<T> getManyObjects();
     /**
      *
      * 功能描述: 预编译,带参数,得到多条记录
@@ -21,7 +21,7 @@ public interface IBaseDao {
      * @param args
      * @return
      */
-    List getManyObjects(String hql, Object[] args);
+    List<T> getManyObjects(String hql, Object[] args);
 
     /**
      *
@@ -31,16 +31,15 @@ public interface IBaseDao {
      * @param args
      * @return
      */
-    Object getOneObject(String hql, Object[] args);
+    T getOneObject(String hql, Object[] args);
 
     /**
      *
      * 功能描述: 保存一条记录
      *
-     * @param obj
      * @return
      */
-    Object save(Object obj);
+    T save(T t);
 
     /**
      *
@@ -49,42 +48,38 @@ public interface IBaseDao {
      * @param objs
      * @return
      */
-    List saveAll(List objs);
+    List<T> saveAll(List<T> objs);
 
     /**
      *
      * 功能描述: 更新一条实体
      *
-     * @param obj
      * @return
      */
-    void update(Object obj);
+    void update(T t);
 
     /**
      *
      * 功能描述: 更新/保存一条实体
      *
-     * @param obj
      * @return
      */
-    void merge(Object obj);
+    void merge(T t);
 
     /**
      *
      * 功能描述: 更新/保存一条实体
      *
-     * @param obj
      * @return
      */
-    void saveOrUpdate(Object obj);
+    void saveOrUpdate(T t);
 
     /**
      *
      * 功能描述: 删除实体
      *
-     * @param obj
      */
-    void delete(Object obj);
+    void delete(T t);
 
     /**
      *
@@ -92,7 +87,7 @@ public interface IBaseDao {
      *
      * @param list
      */
-    void saveManyObjects(List list);
+    void saveManyObjects(List<T> list);
 
     /**
      * 功能描述: 执行HQL
@@ -136,7 +131,7 @@ public interface IBaseDao {
      * @param sql
      * @return
      */
-    List executeNativeSqlQuery(final String sql, final Object[] params);
+    List<T> executeNativeSqlQuery(final String sql, final Object[] params);
 
     /**
      *
@@ -147,7 +142,7 @@ public interface IBaseDao {
      * @param maxRow
      * @return
      */
-    List findByPage(final String sql, final int firstRow, final int maxRow);
+    List<T> findByPage(final String sql, final int firstRow, final int maxRow);
 
     /**
      *
@@ -165,7 +160,7 @@ public interface IBaseDao {
      * @param clazz 实体类
      * @return List
      */
-    List executeNativeSqlQueryForClass(final String sql, final Object[] params, final Class clazz);
+    List<T> executeNativeSqlQueryForClass(final String sql, final Object[] params, final Class clazz);
 
     /**
      *
@@ -174,5 +169,5 @@ public interface IBaseDao {
      * @param sql
      * @return
      */
-    List findMapBySql(final String sql);
+    List<T> findMapBySql(final String sql);
 }

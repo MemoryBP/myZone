@@ -131,20 +131,17 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/de/{id}", method = RequestMethod.GET)
     public Map<String, Object> de(@PathVariable("id") Long id) {
-        Map<String, Object> result = new HashMap<String, Object>();
         try {
             int reval = userService.deleteByPrimaryKey(id);
-            if (reval != 0) {
-                result = Message.success(id);
-            } else {
-                result = Message.failure();
+            if (reval == 0) {
+                return Message.success(id);
             }
         } catch (Exception e) {
             e.printStackTrace();
             return Message.failure();
         }
 
-        return result;
+        return Message.failure();
     }
 
     @ResponseBody
