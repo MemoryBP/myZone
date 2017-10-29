@@ -20,7 +20,7 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 @Repository("baseDaoImp")
-public class BaseDaoImp<T,PK extends Serializable> extends HibernateDaoSupport implements IBaseDao<T,PK>  {
+public abstract class BaseDaoImp<T> extends HibernateDaoSupport implements IBaseDao<T>  {
 
     @Resource
     private SessionFactory sessionFactory;
@@ -34,18 +34,11 @@ public class BaseDaoImp<T,PK extends Serializable> extends HibernateDaoSupport i
      * 映射实体类
      */
     private Class<T> tclazz;
-    private Class<PK> idclazz;
 
     public BaseDaoImp(){
         this.tclazz = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.idclazz = (Class<PK>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        /*this.idclazz = (Class<PK>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];*/
     }
-    /*public Class<PK> getIdclazz() {
-        return idclazz;
-    }
-    public Class<T> getTclazz() {
-        return tclazz;
-    }*/
 
 
     /**

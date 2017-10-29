@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 
 
 @Repository("userDao")
-public class UserDao extends BaseDaoImp<User,Long> implements IUserDao {
+public class UserDao extends BaseDaoImp<User> implements IUserDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 

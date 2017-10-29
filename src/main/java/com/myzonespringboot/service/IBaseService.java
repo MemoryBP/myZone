@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by cgq on 2017/10/26.
  */
-public interface IBaseService<T,PK extends Serializable> {
+public interface IBaseService<T> {
     /**
      *
      * 功能描述: 获取多个结果

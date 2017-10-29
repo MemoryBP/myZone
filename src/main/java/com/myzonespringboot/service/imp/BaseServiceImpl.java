@@ -2,6 +2,7 @@ package com.myzonespringboot.service.imp;
 
 import com.myzonespringboot.dao.IBaseDao;
 import com.myzonespringboot.service.IBaseService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -11,24 +12,18 @@ import java.util.List;
 /**
  * Created by cgq on 2017/10/26.
  */
-public class BaseServiceImpl<T,PK extends Serializable> implements IBaseService<T,PK> {
+public abstract class BaseServiceImpl<T> implements IBaseService<T> {
 
-    @Resource(name = "baseDaoImp")
-    private IBaseDao<T,PK> baseDao;
+    private IBaseDao<T> baseDao;
 
-    private Class<?> tclazz;
-    private Class<?> idclazz;
+    private Class<T> tclazz;
     public BaseServiceImpl() {
-        this.tclazz = (Class<?>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.idclazz = (Class<?>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        this.tclazz = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        /*this.idclazz = (Class<PK>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];*/
     }
-
-    public void setTclazz(Class<?> tclazz) {
-        this.tclazz = tclazz;
-    }
-
-    public void setIdclazz(Class<?> idclazz) {
-        this.idclazz = idclazz;
+    @Resource(name = "baseDaoImp")
+    public void setBaseDao(IBaseDao<T> dao){
+        this.baseDao=dao;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.myzonespringboot.service.imp;
 
+import com.myzonespringboot.dao.IBaseDao;
 import com.myzonespringboot.dao.IUserDao;
 import com.myzonespringboot.dao.imp.BaseDaoImp;
 import com.myzonespringboot.model.PageBean;
@@ -13,9 +14,14 @@ import java.util.List;
 
 @SuppressWarnings("unchecked")
 @Service("userService")
-public class UserServiceImp extends BaseDaoImp<User,Long> implements IUserService {
+public class UserServiceImp extends BaseServiceImpl<User> implements IUserService {
 	@Resource(name = "userDao")
 	private IUserDao userDao;
+
+	@Resource(name = "userDao")
+	public void setBaseDao(IBaseDao<User> baseDao){
+		super.setBaseDao(baseDao);
+	}
 
 	@Override
 	public User login(String username, String password) {

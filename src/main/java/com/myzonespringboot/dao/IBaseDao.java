@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by cgq on 2017/10/26.
  */
-public interface IBaseDao<T,PK extends Serializable> {
+public interface IBaseDao<T> {
     /**
      *
      * 功能描述: 获取多个结果
