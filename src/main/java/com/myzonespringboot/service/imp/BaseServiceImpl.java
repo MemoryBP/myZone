@@ -102,8 +102,8 @@ public abstract class BaseServiceImpl<T> implements IBaseService<T> {
     }
 
     @Override
-    public List<T> findByPage(String sql, int firstRow, int maxRow) {
-        return baseDao.findByPage(sql, firstRow, maxRow);
+    public List<T> findByPage(final int firstRow,final int maxRow) {
+        return baseDao.findByPage(firstRow, maxRow);
     }
 
     @Override

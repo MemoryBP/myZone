@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface IUserService extends IBaseService<User> {
 	User login(String username,String password);
+
+    int selectByUserName(User user);
 	
 	User register(User user);
 	

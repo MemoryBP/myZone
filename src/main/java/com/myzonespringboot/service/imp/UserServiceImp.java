@@ -29,6 +29,11 @@ public class UserServiceImp extends BaseServiceImpl<User> implements IUserServic
 	}
 
 	@Override
+	public int selectByUserName(User user) {
+		return userDao.selectByUserName(user);
+	}
+
+	@Override
 	public User register(User user) {
 		return userDao.register(user);
 	}

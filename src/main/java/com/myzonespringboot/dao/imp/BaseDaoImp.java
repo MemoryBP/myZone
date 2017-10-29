@@ -91,7 +91,6 @@ public abstract class BaseDaoImp<T> extends HibernateDaoSupport implements IBase
      * @return
      */
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW )
     /*@Transactional(readOnly = false)*/
     public T save(T t) {
         return (T)getHibernateTemplate().save(t);
@@ -155,7 +154,6 @@ public abstract class BaseDaoImp<T> extends HibernateDaoSupport implements IBase
      *
      */
     @Override
-    @Transactional(readOnly = false)
     public void delete(T t) {
         getHibernateTemplate().delete(t);
     }
@@ -263,8 +261,18 @@ public abstract class BaseDaoImp<T> extends HibernateDaoSupport implements IBase
     }
 
     @Override
-    public List<T> findByPage(String sql, int firstRow, int maxRow) {
-        return null;
+    public List<T> findByPage(final int firstRow, final int maxRow) {
+        return (List<T>)getHibernateTemplate().execute(new HibernateCallback() {
+            @Override
+            public Object doInHibernate(Session session) {
+                String queryStr="from "+tclazz.getSimpleName();
+                Query q = session.createQuery(queryStr);
+                q.setFirstResult(firstRow);
+                q.setMaxResults(maxRow);
+                return q.list();
+            }
+
+        });
     }
 
     /**

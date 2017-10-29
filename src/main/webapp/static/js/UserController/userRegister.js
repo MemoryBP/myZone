@@ -52,12 +52,15 @@ $(function() {
 			dataType: "JSON",
 			contentType: "application/json",
 			success: function(result) {
-				if (result["code"] == 0) {
-					btn.button('success');
-					layer.msg(result.msg);
-					setTimeout(function() {
-						window.location.href = "login.html";
-					}, 500);
+				if (result.code == 0) {
+                    btn.button('success');
+                    layer.msg(result.msg);
+                    setTimeout(function () {
+                        window.location.href = "login.html";
+                    }, 500);
+                }else if(result.code == 2) {
+                    btn.button('fail');
+                    layer.msg(result.data)
 				} else {
 					btn.button('fail');
 					layer.msg("服务器异常!")

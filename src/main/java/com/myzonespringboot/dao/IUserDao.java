@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface IUserDao extends IBaseDao<User> {
 	User login(String username,String password);
-	
+
+	int selectByUserName(User user);
+
 	User register(User user);
 	
 	int deleteByPrimaryKey(Long id);

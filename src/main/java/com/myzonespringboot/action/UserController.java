@@ -94,6 +94,8 @@ public class UserController {
     public Map<String, Object> register(@RequestBody User user) {
         Map<String, Object> result = new HashMap<String, Object>();
         try {
+            if(userService.selectByUserName(user)==1)
+                return Message.info(2,"用户名已存在!");
             user.setCreateDate(new Date()); // new Date()为获取当前系统时间
             user.setUpdateDate(new Date()); // new Date()为获取当前系统时间
             user.setPassword(EncoderByMd5.getMd5(user.getPassword()));

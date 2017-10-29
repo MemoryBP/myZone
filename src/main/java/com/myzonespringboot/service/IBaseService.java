@@ -139,12 +139,11 @@ public interface IBaseService<T> {
      *
      * 功能描述: 分页查询
      *
-     * @param sql
      * @param firstRow
      * @param maxRow
      * @return
      */
-    List<T> findByPage(final String sql, final int firstRow, final int maxRow);
+    List<T> findByPage(final int firstRow, final int maxRow);
 
     /**
      *
