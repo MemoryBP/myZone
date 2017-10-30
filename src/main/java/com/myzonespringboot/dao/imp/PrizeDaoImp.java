@@ -12,11 +12,4 @@ import java.lang.reflect.ParameterizedType;
  */
 @Repository("prizeDaoImp")
 public class PrizeDaoImp extends BaseDaoImp<Prize> implements IPrizeDao {
-    /*private Class<?> tclazz;
-    private Class<?> idclazz;
-    public PrizeDaoImp() {
-        this.tclazz = (Class<?>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.idclazz = (Class<?>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-    }*/
-
 }

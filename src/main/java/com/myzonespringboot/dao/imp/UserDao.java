@@ -1,5 +1,6 @@
 package com.myzonespringboot.dao.imp;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -89,7 +90,7 @@ public class UserDao extends BaseDaoImp<User> implements IUserDao {
 
     @Override
     public User selectByPrimaryKey(Long id) {
-        User user = (User) getOneObject("from User where id=?", new Long[]{id});
+        User user = getOneObject("from User where id=?", new Long[]{id});
         if (user != null)
             return user;
         return null;
@@ -99,6 +100,7 @@ public class UserDao extends BaseDaoImp<User> implements IUserDao {
     public int updateByPrimaryKeySelective(User record) {
         // 只是更新新的model中不为空的字段
         try {
+            record.setUpdateDate(new Date());
             update(record);
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,6 +114,7 @@ public class UserDao extends BaseDaoImp<User> implements IUserDao {
     public int updateByPrimaryKey(User record) {
         // 为空的字段在数据库中置为NULL
         try {
+            record.setUpdateDate(new Date());
             update(record);
         } catch (Exception e) {
             e.getStackTrace();

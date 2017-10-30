@@ -7,7 +7,9 @@ $(function() {
 			email = $("#uemail"),
 			phone = $("#uphone"),
 			type = $("#utype"),
-			idcard = $("#uidcard");
+			idcard = $("#uidcard"),
+        ucreateDate = $("#ucreateDate").val(),
+        uupdateDate = $("#uupdateDate").val();
 		if (!name.val()) {
 			layer.msg('用户名不能为空!');
 			return;
@@ -44,7 +46,9 @@ $(function() {
 				'email': email.val(),
 				'phone': phone.val(),
 				'type': type.val(),
-				'idCard': idcard.val()
+				'idCard': idcard.val(),
+				'createDate': ucreateDate,
+				'updateDate': uupdateDate
 			};
 		var btn = $(this).button('loading');
 		layer.confirm('确定修改当前数据?', {

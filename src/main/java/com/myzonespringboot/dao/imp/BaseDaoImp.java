@@ -5,12 +5,9 @@ import org.hibernate.*;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +47,7 @@ public abstract class BaseDaoImp<T> extends HibernateDaoSupport implements IBase
     @Override
     public List<T> getManyObjects() {
         System.out.println(tclazz.getSimpleName());
-        return (List<T>) getHibernateTemplate().find("from "+tclazz.getSimpleName());
+        return (List<T>) getHibernateTemplate().find("from "+tclazz.getSimpleName() + " order by id desc ");
     }
 
     /**
@@ -265,7 +262,7 @@ public abstract class BaseDaoImp<T> extends HibernateDaoSupport implements IBase
         return (List<T>)getHibernateTemplate().execute(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) {
-                String queryStr="from "+tclazz.getSimpleName();
+                String queryStr="from "+tclazz.getSimpleName()+" order by id desc " ;
                 Query q = session.createQuery(queryStr);
                 q.setFirstResult(firstRow);
                 q.setMaxResults(maxRow);

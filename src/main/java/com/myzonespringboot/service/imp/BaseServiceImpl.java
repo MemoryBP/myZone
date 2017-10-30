@@ -19,7 +19,6 @@ public abstract class BaseServiceImpl<T> implements IBaseService<T> {
     private Class<T> tclazz;
     public BaseServiceImpl() {
         this.tclazz = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        /*this.idclazz = (Class<PK>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];*/
     }
     @Resource(name = "baseDaoImp")
     public void setBaseDao(IBaseDao<T> dao){

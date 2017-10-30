@@ -1,8 +1,10 @@
 package com.myzonespringboot.action;
 
 import com.myzonespringboot.model.Prize;
+import com.myzonespringboot.model.Prize_record;
 import com.myzonespringboot.model.User;
 import com.myzonespringboot.service.IPrizeService;
+import com.myzonespringboot.service.PrizeRecordService;
 import com.myzonespringboot.util.Message;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller("prizeManageController")
 @RequestMapping("/prizeManage")
@@ -26,106 +26,90 @@ public class PrizeController {
     @Resource(name = "prizeServiceImp")
     private IPrizeService prizeService;
 
+    @Resource(name = "prizeRecordServiceImp")
+    private PrizeRecordService prizeRecordService;
+
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
     Map<String, Object> prize() {
         User user = (User) session.getAttribute("user");
-        // 描述一下 获取Prize表所有
-        List<Prize> prizeList=prizeService.getManyObjects();//
-        for (Prize prize:prizeList){
-            System.out.println(prize.getName());
-        }
-        return user == null ? Message.failure("请先登录!") : Message.success(startPrize());
+        List<Prize> prizeList = prizeService.getManyObjects();
+        return user == null ? Message.failure("请先登录!") : Message.success(startPrize(user, getPercentArea(prizeList), prizeList));
     }
 
-    public void testPriz(){
-        Prize prize=new Prize();
-        prize.setCode(8);
-        prize.setName("测试");
-        prize.setEnable(true);
-        prize.setCreateDate(new Date());
-        prize.setMemo("测试");
-        prizeService.save(prize);
+    /**
+     * 获取中奖记录
+     *
+     * @return
+     */
+    @RequestMapping(value = "/prize_record", method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, Object> prize_record() {
+        User user = (User) session.getAttribute("user");
+        List<Prize_record> prizeRecordList = prizeRecordService.selectRecord(user);
+        List<Map<String, Object>> viewMapList = new ArrayList<Map<String, Object>>();
+        for (Prize_record prize_record : prizeRecordList) {
+            System.out.println(prize_record.getId());
+            /*viewMapList.add(convertViewMap(prize_record));*/
+        }
+        return user == null ? Message.failure("请先登录!") : Message.success(viewMapList);
+    }
+
+    private Map<String, Object> convertViewMap(Prize_record prize_record) {
+        Map<String, Object> viewMap = new HashMap<String, Object>();
+        viewMap.put("username", prize_record.getCustomer().getUsername());
+        viewMap.put("prizeName", prize_record.getPrize().getName());
+        viewMap.put("memo", prize_record.getPrize().getMemo());
+        viewMap.put("createDate", prize_record.getCreateDate());
+        return viewMap;
+    }
+
+    /**
+     * 计算概率区间
+     *
+     * @return
+     */
+    private List<Integer> getPercentArea(List<Prize> prizeList) {
+        List<Integer> areaList = new ArrayList<Integer>();
+        Integer intiArea = 0;
+        areaList.add(intiArea);
+        for (Prize prize : prizeList) {
+            if (prize.isEnable()) {
+                intiArea += prize.getPercent().multiply(new BigDecimal("10000")).intValue();
+                areaList.add(intiArea);
+            }
+        }
+        return areaList;
     }
 
     /**
      * 开始抽奖
      *
+     * @param user      当前用户
+     * @param areaList  概率区间
+     * @param prizeList 奖品
      * @return
      */
-    private Map<String, Object> startPrize() {
+    private Map<String, Object> startPrize(User user, List<Integer> areaList, List<Prize> prizeList) {
         Map<String, Object> prizeMsg = new HashMap<String, Object>();
         int num = (int) (Math.random() * 10000 + 1);//产生1~10001随机数 [1,10001)
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        Prize prize=null;
-        if (num == 1) {
-            prize= prizeService.getOneObject("from Prize where name=?",new String[]{"一等奖"});
-            prizeMsg.put("msg", "恭喜获得一等奖!");
-            prizeMsg.put("choice", 1);
-            prizeMsg.put("content", "恭喜获得一等奖! " +prize.getMemo() + " "+ date);
-        } else if (num > 1 && num <= 10) {
-            prize= prizeService.getOneObject("from Prize where name=?",new String[]{"二等奖"});
-            prizeMsg.put("msg", "恭喜获得二等奖!");
-            prizeMsg.put("choice", 2);
-            prizeMsg.put("content", "恭喜获得二等奖! " +prize.getMemo() + " " + date);
-        } else if (num > 10 && num <= 110) {
-            prize= prizeService.getOneObject("from Prize where name=?",new String[]{"三等奖"});
-            prizeMsg.put("msg", "恭喜获得三等奖!");
-            prizeMsg.put("choice", 3);
-            prizeMsg.put("content", "恭喜获得三等奖! " +prize.getMemo() + " " + date);
-        } else if (num > 110 && num <= 310) {
-            prize= prizeService.getOneObject("from Prize where name=?",new String[]{"四等奖"});
-            prizeMsg.put("msg", "恭喜获得四等奖!");
-            prizeMsg.put("choice", 4);
-            prizeMsg.put("content", "恭喜获得四等奖! " +prize.getMemo() + " " + date);
-        } else if (num > 310 && num <= 610) {
-            prize= prizeService.getOneObject("from Prize where name=?",new String[]{"五等奖"});
-            prizeMsg.put("msg", "恭喜获得五等奖!");
-            prizeMsg.put("choice", 5);
-            prizeMsg.put("content", "恭喜获得五等奖! " +prize.getMemo() + " " + date);
-        } else if (num > 610 && num <= 1110) {
-            prize= prizeService.getOneObject("from Prize where name=?",new String[]{"六等奖"});
-            prizeMsg.put("msg", "恭喜获得六等奖!");
-            prizeMsg.put("choice", 6);
-            prizeMsg.put("content", "恭喜获得六等奖! " +prize.getMemo() + " " + date);
-        } else {
-            prize= prizeService.getOneObject("from Prize where name=?",new String[]{"未中奖"});
+        for (int i = 0; i < areaList.size() - 1; i++) {
+            if (num > areaList.get(i) && num <= areaList.get(i + 1)) {
+                prizeMsg.put("msg", "恭喜获得" + prizeList.get(i).getName());
+                prizeMsg.put("choice", prizeList.get(i).getCode().toString());
+                prizeMsg.put("content", "恭喜获得" + prizeList.get(i).getName() + "!" + prizeList.get(i).getMemo() + " " + date);
+                prizeRecordService.saveRecord(user, prizeList.get(i));
+                return prizeMsg;
+            }
+        }
+
+        if (prizeMsg.size() == 0) {
             prizeMsg.put("msg", "未中奖!");
             prizeMsg.put("choice", 0);
-            prizeMsg.put("content", "未中奖! " +prize.getMemo() + " "  + date);
+            prizeMsg.put("content", "未中奖!" + " " + date);
         }
         return prizeMsg;
-    }
-
-    public static void main(String[] args) {
-        //数据库操作demo
-        //读取已启用的奖品模板以模板及总量
-        List<Prize> prizeList=null;//"select * from prize where enable=1";//获取list
-        Integer size=prizeList.size();//获取list总量
-        Integer remains=0;//剩余奖品总量
-        for (Prize prize:prizeList){
-            remains+=prize.getRemain();
-        }
-
-
-
-
-        int num = (int) (Math.random() * 10000 + 1);//产生1~10001随机数 [1,10001)
-        if (num == 1) {
-            System.out.println(num+"恭喜获得一等奖!");
-        } else if (num > 1 && num <= 10) {
-            System.out.println(num+"恭喜获得二等奖!");
-        } else if (num > 10 && num <= 110) {
-            System.out.println(num+"恭喜获得三等奖!");
-        } else if (num > 110 && num <= 310) {
-            System.out.println(num+"恭喜获得四等奖!");
-        } else if (num > 310 && num <= 610) {
-            System.out.println(num+"恭喜获得五等奖!");
-        } else if (num > 610 && num <= 1110) {
-            System.out.println(num+"恭喜获得六等奖!");
-        } else {
-            System.out.println(num+"未中奖!");
-        }
     }
 }

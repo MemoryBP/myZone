@@ -33,6 +33,7 @@
             margin-top: 20px;
             width: 531px;
             height: 300px;
+            display: inline-block;
         }
 
         .result {
@@ -56,6 +57,11 @@
     <img id="pointer" src="static/img/pointer.png" style="margin-left: 178px;margin-top: 151px;cursor: pointer;"/>
 </div>
 <div class="prize_result">
+    <h1>中奖记录:</h1>
+    <textarea id="record" class="result" readonly="readonly" rows="3" cols="20">
+    </textarea>
+</div>
+<div class="prize_result">
     <h1>抽奖结果:</h1>
     <textarea id="result" class="result" readonly="readonly" rows="3" cols="20">
     </textarea>
@@ -76,6 +82,8 @@
 
     /*是否登录*/
     getLoginedUser();
+
+    getPrizeRecord();
 
 
 
@@ -106,7 +114,6 @@
                     animateTo: rNum + 360 * 5,
                     callback: function () {
                         layer.msg(result.data.msg)
-                        var myDate = new Date().toLocaleString();
                         var new_msg=username + ':'+ result.data.content + '\r\n';
                         msg =new_msg + msg;
                         reval.text(msg)
@@ -145,6 +152,17 @@
             }
         })
     };
+
+    /*获取中奖记录*/
+    function getPrizeRecord() {
+        $.getJSON("/prizeManage/prize_record",function (result) {
+            if(result.code==0){
+                $('#record').text(result.data)
+            }else {
+                layer.msg(result.content)
+            }
+        })
+    }
 </script>
 </body>
 

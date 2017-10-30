@@ -179,4 +179,22 @@ public class Prize implements Serializable {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+    @Override
+    public String toString() {
+        return "Prize{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", memo='" + memo + '\'' +
+                ", code=" + code +
+                ", enable=" + enable +
+                ", size=" + size +
+                ", remain=" + remain +
+                ", percent=" + percent +
+                ", useDate=" + useDate +
+                ", endDate=" + endDate +
+                ", createDate=" + createDate +
+                ", updateDate=" + updateDate +
+                '}';
+    }
 }

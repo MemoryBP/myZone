@@ -151,7 +151,6 @@ public class UserController {
     public Map<String, Object> update(@RequestBody User user) {
         Map<String, Object> result = new HashMap<String, Object>();
         try {
-            System.out.println(user.getId());
             if (user.getId() != null) {
                 userService.updateByPrimaryKeySelective(user);
                 result = Message.success();
