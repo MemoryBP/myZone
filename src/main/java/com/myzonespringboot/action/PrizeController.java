@@ -34,7 +34,7 @@ public class PrizeController {
     public @ResponseBody
     Map<String, Object> prize() {
         User user = (User) session.getAttribute("user");
-        List<Prize> prizeList = prizeService.getManyObjects();
+        List<Prize> prizeList = prizeService.getEnabledPrize();
         return user == null ? Message.failure("请先登录!") : Message.success(startPrize(user, getPercentArea(prizeList), prizeList));
     }
 
@@ -50,8 +50,7 @@ public class PrizeController {
         List<Prize_record> prizeRecordList = prizeRecordService.selectRecord(user);
         List<Map<String, Object>> viewMapList = new ArrayList<Map<String, Object>>();
         for (Prize_record prize_record : prizeRecordList) {
-            System.out.println(prize_record.getId());
-            /*viewMapList.add(convertViewMap(prize_record));*/
+            viewMapList.add(convertViewMap(prize_record));
         }
         return user == null ? Message.failure("请先登录!") : Message.success(viewMapList);
     }
@@ -61,7 +60,7 @@ public class PrizeController {
         viewMap.put("username", prize_record.getCustomer().getUsername());
         viewMap.put("prizeName", prize_record.getPrize().getName());
         viewMap.put("memo", prize_record.getPrize().getMemo());
-        viewMap.put("createDate", prize_record.getCreateDate());
+        viewMap.put("createDate", prize_record.getCreateDate().toString());
         return viewMap;
     }
 
@@ -76,7 +75,8 @@ public class PrizeController {
         areaList.add(intiArea);
         for (Prize prize : prizeList) {
             if (prize.isEnable()) {
-                intiArea += prize.getPercent().multiply(new BigDecimal("10000")).intValue();
+                intiArea += prize.getRemain();
+                /*intiArea += prize.getPercent().multiply(new BigDecimal("10000")).intValue();*/
                 areaList.add(intiArea);
             }
         }
@@ -101,6 +101,10 @@ public class PrizeController {
                 prizeMsg.put("choice", prizeList.get(i).getCode().toString());
                 prizeMsg.put("content", "恭喜获得" + prizeList.get(i).getName() + "!" + prizeList.get(i).getMemo() + " " + date);
                 prizeRecordService.saveRecord(user, prizeList.get(i));
+                Prize prize=prizeList.get(i);
+                prize.setRemain(prize.getRemain()-1);
+                prize.setUpdateDate(new Date());
+                prizeService.update(prize);
                 return prizeMsg;
             }
         }

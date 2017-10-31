@@ -30,6 +30,7 @@
             display: block;
         }
         .prize_result{
+            margin-left: 20%;
             margin-top: 20px;
             width: 531px;
             height: 300px;
@@ -113,10 +114,11 @@
                     angle: 0,
                     animateTo: rNum + 360 * 5,
                     callback: function () {
-                        layer.msg(result.data.msg)
+                        layer.msg(result.data.msg);
                         var new_msg=username + ':'+ result.data.content + '\r\n';
                         msg =new_msg + msg;
-                        reval.text(msg)
+                        reval.text(msg);
+                        getPrizeRecord();
                         running = false;
                     }
                 });
@@ -157,7 +159,14 @@
     function getPrizeRecord() {
         $.getJSON("/prizeManage/prize_record",function (result) {
             if(result.code==0){
-                $('#record').text(result.data)
+                if(result.data !=null && result.data.length > 0){
+                    var dataList='';
+                    $.each(result.data,function (i,item) {
+                        var msg=item.username+':'+item.prizeName+','+item.memo+' '+item.createDate + '\r\n'
+                        dataList =msg+dataList;
+                    });
+                    $('#record').text(dataList)
+                }
             }else {
                 layer.msg(result.content)
             }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 /**
  * Created by cgq on 2017/10/26.
@@ -20,4 +21,10 @@ public class PrizeServiceImp extends BaseServiceImpl<Prize> implements IPrizeSer
    public void setBaseDao(IBaseDao<Prize> baseDao){
        super.setBaseDao(baseDao);
    }
+
+
+    @Override
+    public List<Prize> getEnabledPrize() {
+        return getManyObjects("from Prize where enable=?",new Boolean[]{true});
+    }
 }

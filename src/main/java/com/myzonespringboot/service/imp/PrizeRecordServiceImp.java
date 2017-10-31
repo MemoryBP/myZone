@@ -34,7 +34,7 @@ public class PrizeRecordServiceImp extends BaseServiceImpl<Prize_record> impleme
 
     @Override
     public List<Prize_record> selectRecord(User user) {
-        return executeNativeSqlQuery("select * from prize_record where customer=? ",new Long[]{user.getId()} );
+        return getManyObjects("from Prize_record p where p.customer.id=?",new Long[]{user.getId()});
     }
 
 
