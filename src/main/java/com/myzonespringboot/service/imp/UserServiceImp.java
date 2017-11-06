@@ -8,6 +8,7 @@ import com.myzonespringboot.model.User;
 import com.myzonespringboot.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,58 +25,69 @@ public class UserServiceImp extends BaseServiceImpl<User> implements IUserServic
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User login(String username, String password) {
 		return userDao.login(username, password);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public int selectByUserName(User user) {
 		return userDao.selectByUserName(user);
 	}
 
 	@Override
+	@Transactional
 	public User register(User user) {
 		return userDao.register(user);
 	}
 
 	@Override
+	@Transactional
 	public int deleteByPrimaryKey(Long id) {
 		return userDao.deleteByPrimaryKey(id);
 	}
 
 	@Override
+	@Transactional
 	public int insert(User record) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
+	@Transactional
 	public int insertSelective(User record) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User selectByPrimaryKey(Long id) {
 		return userDao.selectByPrimaryKey(id);
 	}
 
 	@Override
+	@Transactional
 	public int updateByPrimaryKeySelective(User record) {
 		return userDao.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
+	@Transactional
 	public int updateByPrimaryKey(User record) {
 		return userDao.updateByPrimaryKey(record);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<User> findall() {
 		return userDao.findall();
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public PageBean queryForPage(int pageSize, int page) {
 		String hql = "select count(*) from User";
 		int count = userDao.getCount(hql);// 总记录数

@@ -29,6 +29,14 @@ public class PrizeController {
     @Resource(name = "prizeRecordServiceImp")
     private PrizeRecordService prizeRecordService;
 
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, Object> list() {
+        User user = (User) session.getAttribute("user");
+        List<Prize> prizeList = prizeService.getManyObjects();
+        return user == null ? Message.failure("请先登录!") : (user.getType()==0?Message.failure("权限不足!"):Message.success(prizeList));
+    }
+
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
@@ -95,14 +103,14 @@ public class PrizeController {
         Map<String, Object> prizeMsg = new HashMap<String, Object>();
         int num = (int) (Math.random() * 10000 + 1);//产生1~10001随机数 [1,10001)
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        for (int i = 0; i < areaList.size() - 1; i++) {
+        for (int i = 0, length = areaList.size() - 1; i < length; i++) {
             if (num > areaList.get(i) && num <= areaList.get(i + 1)) {
                 prizeMsg.put("msg", "恭喜获得" + prizeList.get(i).getName());
                 prizeMsg.put("choice", prizeList.get(i).getCode().toString());
                 prizeMsg.put("content", "恭喜获得" + prizeList.get(i).getName() + "!" + prizeList.get(i).getMemo() + " " + date);
                 prizeRecordService.saveRecord(user, prizeList.get(i));
-                Prize prize=prizeList.get(i);
-                prize.setRemain(prize.getRemain()-1);
+                Prize prize = prizeList.get(i);
+                prize.setRemain(prize.getRemain() - 1);
                 prize.setUpdateDate(new Date());
                 prizeService.update(prize);
                 return prizeMsg;

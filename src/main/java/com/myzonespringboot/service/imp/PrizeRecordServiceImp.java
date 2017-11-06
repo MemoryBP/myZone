@@ -6,6 +6,7 @@ import com.myzonespringboot.model.Prize_record;
 import com.myzonespringboot.model.User;
 import com.myzonespringboot.service.PrizeRecordService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -23,6 +24,7 @@ public class PrizeRecordServiceImp extends BaseServiceImpl<Prize_record> impleme
     }
 
     @Override
+    @Transactional
     public void saveRecord(User user, Prize prize){
         Prize_record prize_record=new Prize_record();
         prize_record.setCreateDate(new Date());
@@ -33,6 +35,7 @@ public class PrizeRecordServiceImp extends BaseServiceImpl<Prize_record> impleme
     }
 
     @Override
+    @Transactional
     public List<Prize_record> selectRecord(User user) {
         return getManyObjects("from Prize_record p where p.customer.id=?",new Long[]{user.getId()});
     }

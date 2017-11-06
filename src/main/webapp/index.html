@@ -244,6 +244,7 @@
 		<script src="static/js/UserController/registerModal.js"></script>
 		<script src="static/js/UserController/userInfoModal.js"></script>
 		<script src="static/js/UserController/aboutUsModal.js"></script>
+		<script src="static/js/PrizeController/PrizeConfigModal.js"></script>
 		<script src="static/js/UserController/userLogin.js"></script>
 		<script src="static/js/UserController/userRegister.js"></script>
 		<script src="static/js/UserController/userUpdate.js"></script>
@@ -264,7 +265,7 @@
 				$("#header").load("header.html");
 				getLoginedUser()
 				getUsers(pageSize,page)
-				
+                getPrizeConfig()
 			});
 			
 			function getUsers(pageSize,page){
@@ -400,7 +401,8 @@
 						if (result.code == 0) {
 							if (result.data != null) {
 								$('#userLogined').text(result.data.username)
-                                getLocation()
+								if(!$('#location').val())
+                                	getLocation()
 							} else {
 								layer.msg('请登录!')
 								setTimeout(function() {
@@ -449,7 +451,40 @@
                         });
 					}
                 });
-            }
+            };
+
+        function getPrizeConfig() {
+            var url = 'prizeManage/list';
+            $.getJSON(url, function (result) {
+                if(result.code == 0){
+                    var prizeList=$('#prizeList');
+                    prizeList.empty();
+                    if(result.data!=null&&result.data.length>0){
+                        $.each(result.data,function (i,item) {
+                            prizeList.append(
+                                '<tr>\
+                                <td>'+item.id+'</td>\
+                                <td>'+item.code+'</td>\
+                                <td>'+item.name+'</td>\
+                                <td>'+item.enable+'</td>\
+                                <td>'+item.memo+'</td>\
+                                <td>'+item.size+'</td>\
+                                <td>'+item.remain+'</td>\
+                                <td>'+item.percent+'</td>\
+                                <td>'+item.useDate+'</td>\
+                                <td>'+item.endDate+'</td>\
+                                <td>'+item.createDate+'</td>\
+                                <td>'+item.updateDate+'</td>\
+                                </tr>'
+							)
+                        })
+					}else {
+                        prizeList.append('<tr><td colspan="12" style="text-align:center">没有数据</td></tr>')
+					}
+                }
+            });
+        };
+
 		</script>
 	</body>
 
